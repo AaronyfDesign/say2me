@@ -17,12 +17,12 @@ jobs:
         run: ./build.sh
 
       - name: Zip app
-        run: cd build && zip -qry SenseDict.app.zip SenseDict.app
+        run: cd build && zip -qry say2me.app.zip say2me.app
 
       - uses: actions/upload-artifact@v4
         with:
-          name: SenseDict-macos-arm64
-          path: build/SenseDict.app.zip
+          name: say2me-macos-arm64
+          path: build/say2me.app.zip
 
   # 端到端冒烟：合成语音 -> 完整 Swift 管线 -> sherpa-onnx 识别
   smoke:
@@ -69,13 +69,13 @@ jobs:
         run: ./build.sh
 
       - name: Zip app
-        run: cd build && zip -qry "SenseDict-${GITHUB_REF_NAME}-macos-arm64.zip" SenseDict.app
+        run: cd build && zip -qry "say2me-${GITHUB_REF_NAME}-macos-arm64.zip" say2me.app
 
       - name: Create GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release create "$GITHUB_REF_NAME" \
-            "build/SenseDict-${GITHUB_REF_NAME}-macos-arm64.zip" \
+            "build/say2me-${GITHUB_REF_NAME}-macos-arm64.zip" \
             --title "$GITHUB_REF_NAME" \
             --generate-notes

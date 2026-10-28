@@ -1,94 +1,94 @@
-# SenseDict
+# say2me
 
-[English](README_EN.md) | 中文
+English | [中文](README.zh-CN.md)
 
-本地语音听写工具：双击 Control 开始听写，再按一次结束（或超时自动结束），识别文本自动粘贴到光标处。基于 SenseVoice-Small 模型与 sherpa-onnx 推理，全程离线，音频不出本机。
+A local dictation tool for macOS: double-tap Control to start dictation, tap the trigger again to stop (or let it auto-stop), and the recognized text is pasted at your cursor. Powered by the SenseVoice-Small model with sherpa-onnx inference — fully offline, your audio never leaves the machine.
 
-## 特性
+## Features
 
-- 触发方式可自定义：双击 Control / Option / Command，或录制任意组合键
-- 默认自动结束 30 秒，可在设置中调整
-- 自动检测语言（中、粤、英、日、韩），可锁定单一语言
-- 识别结果自动粘贴到当前光标位置（或仅复制到剪贴板）
-- 菜单栏常驻，无 Dock 图标
+- Customizable trigger: double-tap Control / Option / Command, or record any key combo
+- Auto-stops after 30 seconds by default (configurable)
+- Auto language detection (Chinese, Cantonese, English, Japanese, Korean), or lock to one
+- Result pasted at the cursor (or copied to clipboard only)
+- Menu bar resident, no Dock icon
 
-## 系统要求
+## Requirements
 
-- macOS 13 及以上，Apple Silicon
-- Xcode Command Line Tools（仅构建时需要）
+- macOS 13+, Apple Silicon
+- Xcode Command Line Tools (build time only)
 
-## 快速开始
+## Quick Start
 
 ```bash
-# 1. 下载 sherpa-onnx 二进制（一次即可）
+# 1. Download sherpa-onnx binaries (one-time)
 mkdir -p vendor
 curl -sL -o /tmp/sherpa.tar.bz2 \
   https://github.com/k2-fsa/sherpa-onnx/releases/download/v2.0.1/sherpa-onnx-v2.0.1-osx-arm64-shared.tar.bz2
 tar xjf /tmp/sherpa.tar.bz2 -C vendor
 
-# 2. 下载 SenseVoice-Small int8 模型（约 230MB）
+# 2. Download the SenseVoice-Small int8 model (~230MB)
 mkdir -p models/sense-voice
 curl -sL -o models/sense-voice/model.int8.onnx \
   https://huggingface.co/csukuangfj/sherpa-onnx-sense-voice-zh-en-ja-ko-yue-2024-07-17/resolve/main/model.int8.onnx
 curl -sL -o models/sense-voice/tokens.txt \
   https://huggingface.co/csukuangfj/sherpa-onnx-sense-voice-zh-en-ja-ko-yue-2024-07-17/resolve/main/tokens.txt
 
-# 3. 构建
+# 3. Build
 ./build.sh
 
-# 4. 运行
-open build/SenseDict.app
+# 4. Run
+open build/say2me.app
 ```
 
-## 首次运行权限
+## First-run Permissions
 
-应用需要两项权限，均在系统提示时授予：
+Two permissions are required:
 
-1. 辅助功能（Accessibility）——用于监听双击修饰键、模拟 Cmd+V 粘贴。
-   系统设置 → 隐私与安全性 → 辅助功能，把 SenseDict 打开。
-   若列表里出现的是「未知」，先退出应用、用下面的方式重新打开一次再勾选。
-2. 麦克风——首次听写时系统会弹窗询问。
+1. **Accessibility** — for modifier double-tap detection and simulating Cmd+V.
+   System Settings → Privacy & Security → Accessibility, enable say2me.
+   If it shows as "unknown", quit the app and relaunch it, then re-check.
+2. **Microphone** — prompted on first dictation.
 
-授予辅助功能后建议退出并重新打开应用，事件监听才会生效。
+After granting Accessibility, quit and relaunch the app for the event tap to become active.
 
-## 使用
+## Usage
 
-1. 双击 Control（默认）开始听写，听到提示音，光标旁会浮现「听写中…」提示胶囊
-2. 对着麦克风说话
-3. 单击一次同一触发键结束（结束提示音）；或超过设定秒数自动结束
-4. 稍候约半秒，文本自动粘贴到当前光标位置
+1. Double-tap Control (default) to start — you'll hear a chime and a "listening…" pill appears near the caret
+2. Speak
+3. Tap the same trigger once to finish (stop chime), or wait for the auto-stop
+4. After ~0.5s the text is pasted at your cursor
 
-双击开始、单击结束：只统计「孤立按压」，打字、组合键、滚轮不会误触。开始后 0.3 秒内的触发键活动不会被当成结束指令（防止双击尾部误停）。
+Double-tap to start, single-tap to stop: only isolated presses count; typing, chords and scrolling never trigger it. Trigger activity within 0.3s after start is ignored (guards against the double-tap tail).
 
-设置面板（菜单栏图标 → 设置…）可改触发键、语言、数字规整、插入方式，并提供「录 3 秒并识别」测试按钮。
+The settings panel (menu bar icon → Settings…) lets you change the trigger, language, inverse text normalization, insertion mode, and includes a "record 3s and recognize" test button.
 
-## 目录结构
+## Project Layout
 
 ```
-Sources/          Swift 源码（无 Xcode 工程，swiftc 直接编译）
-  main.swift            菜单栏入口
-  HotkeyCenter.swift    双击修饰键检测 + 自定义热键
-  AudioRecorder.swift   麦克风采集 + WAV 写入
-  Recognizer.swift      调用 sherpa-onnx CLI 识别
-  DictationController.swift   状态机
-  TextInserter.swift    剪贴板交换 + 模拟粘贴
-  SettingsView.swift    设置窗口（SwiftUI）
-tests/smoke.swift       无 GUI 端到端冒烟测试（解码→WAV→识别）
-build.sh                构建脚本
+Sources/          Swift sources (no Xcode project; compiled with swiftc)
+  main.swift            Menu bar entry point
+  HotkeyCenter.swift    Modifier double-tap detection + custom hotkeys
+  AudioRecorder.swift   Mic capture + WAV writing
+  Recognizer.swift      sherpa-onnx CLI invocation
+  DictationController.swift   State machine
+  TextInserter.swift    Clipboard swap + simulated paste
+  SettingsView.swift    Settings window (SwiftUI)
+tests/smoke.swift       Headless end-to-end smoke test (decode→WAV→recognize)
+build.sh                Build script
 ```
 
-## 冒烟测试
+## Smoke Test
 
 ```bash
 bash tests/smoke.sh
 ```
 
-用系统 `say` 合成中英文语音，经完整识别管线验证，不依赖麦克风与 GUI。
+Synthesizes Chinese/English speech with the system `say` voice and runs it through the full pipeline — no mic or GUI needed.
 
-## 已知限制
+## Known Limitations
 
-- 识别为非流式：说完一段后一次性出结果，无逐字上屏
-- 无热词/自定义词表能力
-- 粘贴模式下会短暂占用剪贴板（约 1.5 秒后恢复原内容，若目标应用已读取或用户有操作则不恢复）
-- 提示胶囊位置取焦点输入框光标的 AX 坐标，取不到时跟随鼠标；个别自绘输入框可能定位不到
-- 起止提示音使用系统音效（开始 Tink / 结束 Pop），可在设置中关闭
+- Recognition is non-streaming: results appear once per utterance, no incremental display
+- No hotword / custom vocabulary support
+- Paste mode briefly occupies the clipboard (~1.5s; original contents restored only if nothing else touched the board)
+- The pill position uses the caret's Accessibility bounds, falling back to the mouse; some custom-drawn text fields may not be locatable
+- Start/stop chimes use system sounds (Tink / Pop), can be turned off in settings

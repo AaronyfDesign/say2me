@@ -120,7 +120,7 @@ final class DictationController: ObservableObject {
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             dbg("transcribe begin, samples=\(samples.count)")
             let wavURL = FileManager.default.temporaryDirectory
-                .appendingPathComponent("sensedict-\(UUID().uuidString).wav")
+                .appendingPathComponent("say2me-\(UUID().uuidString).wav")
             do {
                 try WavWriter.write(samples: samples, to: wavURL)
                 defer { try? FileManager.default.removeItem(at: wavURL) }

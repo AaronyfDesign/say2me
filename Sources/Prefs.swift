@@ -69,10 +69,10 @@ final class Prefs: ObservableObject {
 
     // MARK: - Path resolution
 
-    /// Repo root inferred from app bundle: <repo>/build/SenseDict.app
+    /// Repo root inferred from app bundle: <repo>/build/say2me.app
     static func repoRoot() -> URL {
         Bundle.main.bundleURL
-            .deletingLastPathComponent()   // SenseDict.app
+            .deletingLastPathComponent()   // say2me.app
             .deletingLastPathComponent()   // build/
     }
 

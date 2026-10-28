@@ -76,7 +76,7 @@ final class StatusBarController: NSObject, ObservableObject, NSMenuDelegate {
                                  action: nil, keyEquivalent: "")
         last.isEnabled = false
         menu.addItem(.separator())
-        menu.addItem(withTitle: "退出 SenseDict", action: #selector(quit(_:)),
+        menu.addItem(withTitle: "退出 say2me", action: #selector(quit(_:)),
                      keyEquivalent: "q")
         for item in menu.items where item.action != nil { item.target = self }
         statusItem.menu = menu
@@ -107,7 +107,7 @@ final class StatusBarController: NSObject, ObservableObject, NSMenuDelegate {
             contentRect: NSRect(x: 0, y: 0, width: 480, height: 580),
             styleMask: [.titled, .closable],
             backing: .buffered, defer: false)
-        w.title = "SenseDict 设置"
+        w.title = "say2me 设置"
         w.isReleasedWhenClosed = false
         w.contentView = NSHostingView(rootView: SettingsView(prefs: Prefs.shared,
                                                               controller: controller))

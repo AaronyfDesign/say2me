@@ -3,11 +3,11 @@
 <plist version="1.0">
 <dict>
     <key>CFBundleName</key>
-    <string>SenseDict</string>
+    <string>say2me</string>
     <key>CFBundleDisplayName</key>
-    <string>SenseDict</string>
+    <string>say2me</string>
     <key>CFBundleIdentifier</key>
-    <string>personal.sensedict</string>
+    <string>personal.say2me</string>
     <key>CFBundleVersion</key>
     <string>0.1.0</string>
     <key>CFBundleShortVersionString</key>
@@ -15,7 +15,7 @@
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleExecutable</key>
-    <string>SenseDict</string>
+    <string>say2me</string>
     <key>CFBundleIconFile</key>
     <string>AppIcon</string>
     <key>LSMinimumSystemVersion</key>
@@ -23,7 +23,7 @@
     <key>LSUIElement</key>
     <true/>
     <key>NSMicrophoneUsageDescription</key>
-    <string>SenseDict 需要使用麦克风进行本地语音识别，音频不会离开本机。</string>
+    <string>say2me 需要使用麦克风进行本地语音识别，音频不会离开本机。</string>
     <key>LSApplicationCategoryType</key>
     <string>public.app-category.utilities</string>
     <key>NSAppleEventsUsageDescription</key>

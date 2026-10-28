@@ -2,7 +2,7 @@ import AppKit
 import ApplicationServices
 import os
 
-private let log = Logger(subsystem: "personal.sensedict", category: "insert")
+private let log = Logger(subsystem: "personal.say2me", category: "insert")
 
 /// Inserts recognized text at the current focus:
 ///  - paste mode: temporarily swaps the clipboard, simulates Cmd+V, restores

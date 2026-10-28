@@ -1,11 +1,11 @@
 #!/bin/bash
-# Build SenseDict.app (menu bar dictation, SenseVoice-Small via sherpa-onnx).
+# Build say2me.app (menu bar dictation, SenseVoice-Small via sherpa-onnx).
 # Requires only Xcode Command Line Tools (swiftc). No code signing needed
 # for local use; we ad-hoc sign so the Accessibility TCC entry is stable.
 set -euo pipefail
 cd "$(dirname "$0")"
 
-APP=SenseDict
+APP=say2me
 BUILD=build
 mkdir -p "$BUILD"
 

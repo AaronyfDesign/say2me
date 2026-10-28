@@ -1,4 +1,4 @@
-// Headless smoke test for SenseDict logic (no GUI, no mic).
+// Headless smoke test for say2me logic (no GUI, no mic).
 // Reads a wav file, rewrites it through WavWriter, runs the recognizer,
 // prints the result. Build & run via tests/smoke.sh.
 import Foundation

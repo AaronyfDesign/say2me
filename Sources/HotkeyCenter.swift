@@ -4,11 +4,11 @@ import Carbon
 import ApplicationServices
 import os
 
-private let log = Logger(subsystem: "personal.sensedict", category: "hotkey")
+private let log = Logger(subsystem: "personal.say2me", category: "hotkey")
 
 /// Ground-truth file logger: unified log has proven unreliable for this app.
 func dbg(_ s: String) {
-    let path = "/tmp/sensedict-debug.log"
+    let path = "/tmp/say2me-debug.log"
     let line = "\(Date().timeIntervalSince1970) \(s)\n"
     let data = line.data(using: .utf8) ?? Data()
     if let h = FileHandle(forWritingAtPath: path) {
