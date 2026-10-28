@@ -22,6 +22,21 @@ rm -rf "$BUNDLE"
 mkdir -p "$BUNDLE/Contents/MacOS"
 mv "$BUILD/$APP" "$BUNDLE/Contents/MacOS/$APP"
 cp Info.plist "$BUNDLE/Contents/Info.plist"
+
+# App icon: prebuild icns if missing, ship into Resources
+if [ ! -f Assets/AppIcon.icns ] && [ -f Assets/AppIcon.png ]; then
+  mkdir -p "/tmp/say2me.iconset"
+  for s in 16 32 128 256 512; do
+    sips -z $s $s Assets/AppIcon.png --out "/tmp/say2me.iconset/icon_${s}x${s}.png" >/dev/null
+    d=$((s*2))
+    sips -z $d $d Assets/AppIcon.png --out "/tmp/say2me.iconset/icon_${s}x${s}@2x.png" >/dev/null
+  done
+  iconutil -c icns /tmp/say2me.iconset -o Assets/AppIcon.icns
+fi
+if [ -f Assets/AppIcon.icns ]; then
+  mkdir -p "$BUNDLE/Contents/Resources"
+  cp Assets/AppIcon.icns "$BUNDLE/Contents/Resources/AppIcon.icns"
+fi
 touch "$BUNDLE"
 
 # Sign with a stable self-signed identity so the Accessibility grant

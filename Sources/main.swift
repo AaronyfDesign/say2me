@@ -36,12 +36,15 @@ final class StatusBarController: NSObject, ObservableObject, NSMenuDelegate {
     private func refreshIcon() {
         let icon: NSImage
         switch controller.state {
-        case .idle: icon = NSImage(systemSymbolName: "waveform.circle",
-                                    accessibilityDescription: "SenseDict 待机")!
-        case .recording: icon = NSImage(systemSymbolName: "waveform.circle.fill",
-                                         accessibilityDescription: "SenseDict 录音中")!
-        case .transcribing: icon = NSImage(systemSymbolName: "hourglass.circle.fill",
-                                            accessibilityDescription: "SenseDict 识别中")!
+        case .idle:
+            icon = BrandIcon.menuIcon(for: .idle)
+            icon.accessibilityDescription = "say2me 待机"
+        case .recording:
+            icon = BrandIcon.menuIcon(for: .recording)
+            icon.accessibilityDescription = "say2me 录音中"
+        case .transcribing:
+            icon = BrandIcon.menuIcon(for: .transcribing)
+            icon.accessibilityDescription = "say2me 识别中"
         }
         statusItem.button?.image = icon
     }
