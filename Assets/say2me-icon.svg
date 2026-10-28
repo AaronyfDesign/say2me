@@ -1,52 +1,54 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
   <defs>
-    <!-- macOS 风格连续圆角（squircle 近似） -->
-    <path id="squircle" d="M 512 8
-      C 210 8 96 24 60 60
-      C 24 96 8 210 8 512
-      C 8 814 24 928 60 964
-      C 96 1000 210 1016 512 1016
-      C 814 1016 928 1000 964 964
-      C 1000 928 1016 814 1016 512
-      C 1016 210 1000 96 964 60
-      C 928 24 814 8 512 8 Z"/>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#6366F1"/>
-      <stop offset="100%" stop-color="#8B5CF6"/>
+    <!-- 深色衬底上的内缩 squircle -->
+    <path id="squircle" d="M 330 146
+      H 694
+      C 806 146 884 224 884 336
+      V 700
+      C 884 812 806 890 694 890
+      H 330
+      C 218 890 140 812 140 700
+      V 336
+      C 140 224 218 146 330 146
+      Z"/>
+    <linearGradient id="bg" x1="0.2" y1="0" x2="0.65" y2="1">
+      <stop offset="0%" stop-color="#8166E6"/>
+      <stop offset="55%" stop-color="#6A4ED4"/>
+      <stop offset="100%" stop-color="#4B3AB2"/>
     </linearGradient>
-    <linearGradient id="sheen" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.16"/>
-      <stop offset="55%" stop-color="#FFFFFF" stop-opacity="0.02"/>
-      <stop offset="100%" stop-color="#000000" stop-opacity="0.06"/>
+    <radialGradient id="glow" cx="0.35" cy="0.12" r="0.75">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.28"/>
+      <stop offset="45%" stop-color="#FFFFFF" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.16"/>
+    </radialGradient>
+    <linearGradient id="wave" x1="0.5" y1="0" x2="0.5" y2="1">
+      <stop offset="0%" stop-color="#B2F5DF"/>
+      <stop offset="100%" stop-color="#46D2AC"/>
     </linearGradient>
     <filter id="bubbleShadow" x="-30%" y="-30%" width="160%" height="160%">
-      <feDropShadow dx="0" dy="12" stdDeviation="22" flood-color="#1E1B4B" flood-opacity="0.28"/>
+      <feDropShadow dx="0" dy="10" stdDeviation="18" flood-color="#141235" flood-opacity="0.35"/>
     </filter>
   </defs>
 
-  <!-- 背景 squircle -->
+  <!-- 深色衬底 + 内缩渐变 squircle -->
+  <rect width="1024" height="1024" fill="#2C2F40"/>
   <use href="#squircle" fill="url(#bg)"/>
-  <!-- 顶部高光/底部压暗，增加体积感 -->
-  <use href="#squircle" fill="url(#sheen)"/>
+  <use href="#squircle" fill="url(#glow)"/>
 
-  <!-- 对话气泡：含左下尾巴的单一闭合路径 -->
-  <path filter="url(#bubbleShadow)" fill="#FFFFFF" d="
-    M 286 360
-    H 504
-    Q 600 360 600 456
-    V 644
-    Q 600 740 504 740
-    H 350
-    L 225 835
-    L 190 660
-    V 456
-    Q 190 360 286 360
-    Z"/>
+  <!-- 对话气泡：圆润主体 + 左下小尾巴 -->
+  <g filter="url(#bubbleShadow)" fill="#FFFFFF">
+    <circle cx="408" cy="522" r="132"/>
+    <path d="M 358 616
+             Q 318 666 262 678
+             Q 336 670 396 616
+             Q 376 622 358 616 Z"/>
+  </g>
 
-  <!-- 声波弧线：圆心在气泡右缘中点 (600,550)，±45° -->
-  <g fill="none" stroke="#7FE8C3" stroke-width="56" stroke-linecap="round">
-    <path d="M 678 472 A 110 110 0 0 1 678 628"/>
-    <path d="M 741 409 A 200 200 0 0 1 741 691"/>
-    <path d="M 805 345 A 290 290 0 0 1 805 755"/>
+  <!-- 四道声波弧线：同心于 (408,522)，向右辐射，±42° -->
+  <g fill="none" stroke="url(#wave)" stroke-width="48" stroke-linecap="round">
+    <path d="M 551 403 A 190 190 0 0 1 551 657"/>
+    <path d="M 600 359 A 255 255 0 0 1 600 701"/>
+    <path d="M 648 316 A 320 320 0 0 1 648 744"/>
+    <path d="M 696 272 A 385 385 0 0 1 696 788"/>
   </g>
 </svg>
