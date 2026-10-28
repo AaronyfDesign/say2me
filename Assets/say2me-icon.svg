@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <!-- macOS 风格连续圆角（squircle 近似） -->
+    <path id="squircle" d="M 512 8
+      C 210 8 96 24 60 60
+      C 24 96 8 210 8 512
+      C 8 814 24 928 60 964
+      C 96 1000 210 1016 512 1016
+      C 814 1016 928 1000 964 964
+      C 1000 928 1016 814 1016 512
+      C 1016 210 1000 96 964 60
+      C 928 24 814 8 512 8 Z"/>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366F1"/>
+      <stop offset="100%" stop-color="#8B5CF6"/>
+    </linearGradient>
+    <linearGradient id="sheen" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.16"/>
+      <stop offset="55%" stop-color="#FFFFFF" stop-opacity="0.02"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.06"/>
+    </linearGradient>
+    <filter id="bubbleShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="12" stdDeviation="22" flood-color="#1E1B4B" flood-opacity="0.28"/>
+    </filter>
+  </defs>
+
+  <!-- 背景 squircle -->
+  <use href="#squircle" fill="url(#bg)"/>
+  <!-- 顶部高光/底部压暗，增加体积感 -->
+  <use href="#squircle" fill="url(#sheen)"/>
+
+  <!-- 对话气泡：含左下尾巴的单一闭合路径 -->
+  <path filter="url(#bubbleShadow)" fill="#FFFFFF" d="
+    M 286 360
+    H 504
+    Q 600 360 600 456
+    V 644
+    Q 600 740 504 740
+    H 350
+    L 225 835
+    L 190 660
+    V 456
+    Q 190 360 286 360
+    Z"/>
+
+  <!-- 声波弧线：圆心在气泡右缘中点 (600,550)，±45° -->
+  <g fill="none" stroke="#7FE8C3" stroke-width="56" stroke-linecap="round">
+    <path d="M 678 472 A 110 110 0 0 1 678 628"/>
+    <path d="M 741 409 A 200 200 0 0 1 741 691"/>
+    <path d="M 805 345 A 290 290 0 0 1 805 755"/>
+  </g>
+</svg>
