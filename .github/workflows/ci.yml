@@ -1,0 +1,81 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+
+jobs:
+  # 编译 app（ad-hoc 签名），产物作为 artifact 供下载
+  build:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build app bundle
+        run: ./build.sh
+
+      - name: Zip app
+        run: cd build && zip -qry SenseDict.app.zip SenseDict.app
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SenseDict-macos-arm64
+          path: build/SenseDict.app.zip
+
+  # 端到端冒烟：合成语音 -> 完整 Swift 管线 -> sherpa-onnx 识别
+  smoke:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache model & vendor deps
+        uses: actions/cache@v4
+        with:
+          path: |
+            models/sense-voice
+            vendor/sherpa-onnx-v2.0.1-osx-arm64-shared
+          key: say2me-deps-sensevoice-20240717-sherpa-v2.0.1
+
+      - name: Download SenseVoice model & sherpa-onnx CLI
+        run: |
+          mkdir -p models/sense-voice vendor/sherpa-onnx-v2.0.1-osx-arm64-shared .deps
+          curl -L --fail --retry 3 \
+            -o .deps/model.tar.bz2 \
+            https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/sherpa-onnx-sense-voice-zh-en-ja-ko-yue-2024-07-17.tar.bz2
+          tar -xjf .deps/model.tar.bz2 -C .deps
+          cp .deps/sherpa-onnx-sense-voice-zh-en-ja-ko-yue-2024-07-17/model.int8.onnx models/sense-voice/
+          cp .deps/sherpa-onnx-sense-voice-zh-en-ja-ko-yue-2024-07-17/tokens.txt models/sense-voice/
+          curl -L --fail --retry 3 \
+            -o .deps/vendor.tar.bz2 \
+            https://github.com/k2-fsa/sherpa-onnx/releases/download/v2.0.1/sherpa-onnx-v2.0.1-osx-arm64-shared.tar.bz2
+          tar -xjf .deps/vendor.tar.bz2 -C vendor/sherpa-onnx-v2.0.1-osx-arm64-shared --strip-components=1
+
+      - name: Run smoke test
+        run: ./tests/smoke.sh
+
+  # 打 tag（v*）时：build + smoke 通过后发布 Release 并附上 app zip
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [build, smoke]
+    runs-on: macos-14
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build app bundle
+        run: ./build.sh
+
+      - name: Zip app
+        run: cd build && zip -qry "SenseDict-${GITHUB_REF_NAME}-macos-arm64.zip" SenseDict.app
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            "build/SenseDict-${GITHUB_REF_NAME}-macos-arm64.zip" \
+            --title "$GITHUB_REF_NAME" \
+            --generate-notes
