@@ -1,0 +1,5 @@
+build/
+tests/smoke
+vendor/
+models/
+.DS_Store
