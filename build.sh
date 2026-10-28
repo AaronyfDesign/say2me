@@ -37,6 +37,15 @@ if [ -f Assets/AppIcon.icns ]; then
   mkdir -p "$BUNDLE/Contents/Resources"
   cp Assets/AppIcon.icns "$BUNDLE/Contents/Resources/AppIcon.icns"
 fi
+
+# 内置 sherpa-onnx CLI + 动态库（二进制 rpath 为 @loader_path/../lib，保持 bin/lib 结构即可）
+VENDOR_DIR=$(ls -d vendor/sherpa-onnx-*osx-arm64-shared 2>/dev/null | head -1)
+if [ -n "$VENDOR_DIR" ]; then
+  mkdir -p "$BUNDLE/Contents/Resources/sherpa-onnx/bin"
+  cp "$VENDOR_DIR/bin/sherpa-onnx-offline" "$BUNDLE/Contents/Resources/sherpa-onnx/bin/"
+  cp -R "$VENDOR_DIR/lib" "$BUNDLE/Contents/Resources/sherpa-onnx/"
+fi
+
 touch "$BUNDLE"
 
 # Sign with a stable self-signed identity so the Accessibility grant

@@ -13,6 +13,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Cache sherpa-onnx vendor
+        uses: actions/cache@v4
+        with:
+          path: vendor/sherpa-onnx-v2.0.1-osx-arm64-shared
+          key: say2me-vendor-sherpa-v2.0.1
+
+      - name: Download sherpa-onnx CLI (bundled into app)
+        run: |
+          mkdir -p vendor/sherpa-onnx-v2.0.1-osx-arm64-shared .deps
+          curl -L --fail --retry 3 \
+            -o .deps/vendor.tar.bz2 \
+            https://github.com/k2-fsa/sherpa-onnx/releases/download/v2.0.1/sherpa-onnx-v2.0.1-osx-arm64-shared.tar.bz2
+          tar -xjf .deps/vendor.tar.bz2 -C vendor/sherpa-onnx-v2.0.1-osx-arm64-shared --strip-components=1
+
       - name: Build app bundle
         run: ./build.sh
 
@@ -64,6 +78,20 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
+
+      - name: Cache sherpa-onnx vendor
+        uses: actions/cache@v4
+        with:
+          path: vendor/sherpa-onnx-v2.0.1-osx-arm64-shared
+          key: say2me-vendor-sherpa-v2.0.1
+
+      - name: Download sherpa-onnx CLI (bundled into app)
+        run: |
+          mkdir -p vendor/sherpa-onnx-v2.0.1-osx-arm64-shared .deps
+          curl -L --fail --retry 3 \
+            -o .deps/vendor.tar.bz2 \
+            https://github.com/k2-fsa/sherpa-onnx/releases/download/v2.0.1/sherpa-onnx-v2.0.1-osx-arm64-shared.tar.bz2
+          tar -xjf .deps/vendor.tar.bz2 -C vendor/sherpa-onnx-v2.0.1-osx-arm64-shared --strip-components=1
 
       - name: Build app bundle
         run: ./build.sh

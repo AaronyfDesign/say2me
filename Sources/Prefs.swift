@@ -82,6 +82,7 @@ final class Prefs: ObservableObject {
             return Prefs.shared.modelDir
         }
         let candidates = [
+            ModelDownloader.modelDir.path,
             repoRoot().appendingPathComponent("models/sense-voice").path,
             NSString("~/sense-dict-models/sense-voice").expandingTildeInPath,
         ]
@@ -95,6 +96,10 @@ final class Prefs: ObservableObject {
         if !Prefs.shared.cliPath.isEmpty, FileManager.default.isExecutableFile(atPath: Prefs.shared.cliPath) {
             return Prefs.shared.cliPath
         }
+        // 内置在 app Resources 里的 CLI（release 包随 app 分发）
+        let bundled = Bundle.main.bundleURL
+            .appendingPathComponent("Contents/Resources/sherpa-onnx/bin/sherpa-onnx-offline").path
+        if FileManager.default.isExecutableFile(atPath: bundled) { return bundled }
         // any vendored sherpa-onnx osx-arm64 package next to the repo
         let vendor = repoRoot().appendingPathComponent("vendor")
         if let ents = try? FileManager.default.contentsOfDirectory(atPath: vendor.path) {

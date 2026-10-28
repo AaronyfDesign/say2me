@@ -17,6 +17,13 @@
 - macOS 13 及以上，Apple Silicon
 - Xcode Command Line Tools（仅构建时需要）
 
+## 使用 Release 包（推荐）
+
+1. 从 [Releases](https://github.com/AaronyfDesign/say2me/releases) 下载 `say2me-vX.Y.Z-macos-arm64.zip`，解压直接运行。语音推理引擎已内置在 app 里。
+2. 若被 Gatekeeper 拦截：`xattr -cr say2me.app` 后再打开。
+3. 首次启动后点菜单栏图标，选择「语音模型：未下载（点击下载）」，会自动把 SenseVoice 模型（约 230MB）下载到 `~/Library/Application Support/say2me/model/`。
+4. 手动方式：从 [模型 release](https://github.com/AaronyfDesign/say2me/releases/tag/model-sensevoice-v1) 下载 `say2me-sensevoice-model.zip`，解压到 `~/Library/Application Support/say2me/model/`（里面应有 `model.int8.onnx` 和 `tokens.txt`）。
+
 ## 快速开始
 
 ```bash

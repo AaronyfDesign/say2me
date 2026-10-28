@@ -70,6 +70,27 @@ final class StatusBarController: NSObject, ObservableObject, NSMenuDelegate {
             warn.target = self
         }
         menu.addItem(.separator())
+        let modelItem: NSMenuItem
+        switch ModelDownloader.shared.state {
+        case .ready:
+            modelItem = menu.addItem(withTitle: "语音模型：已就绪", action: nil, keyEquivalent: "")
+            modelItem.isEnabled = false
+        case .notDownloaded:
+            modelItem = menu.addItem(withTitle: "语音模型：未下载（点击下载，约 170MB）",
+                                     action: #selector(downloadModel(_:)), keyEquivalent: "")
+        case .downloading(_, let got, let total):
+            modelItem = menu.addItem(withTitle: "正在下载语音模型…\(got)MB" + (total > 0 ? "/\(total)MB" : ""),
+                                     action: nil, keyEquivalent: "")
+            modelItem.isEnabled = false
+        case .extracting:
+            modelItem = menu.addItem(withTitle: "正在解压语音模型…", action: nil, keyEquivalent: "")
+            modelItem.isEnabled = false
+        case .failed(let msg):
+            modelItem = menu.addItem(withTitle: "模型下载失败：\(msg)（点击重试）",
+                                     action: #selector(downloadModel(_:)), keyEquivalent: "")
+        }
+        modelItem.target = self
+        menu.addItem(.separator())
         menu.addItem(withTitle: "设置…", action: #selector(openSettings(_:)),
                      keyEquivalent: ",")
         let last = menu.addItem(withTitle: "上次识别结果：\(controller.lastResult.isEmpty ? "(空)" : controller.lastResult)",
@@ -96,6 +117,10 @@ final class StatusBarController: NSObject, ObservableObject, NSMenuDelegate {
     }
 
     @objc private func toggle(_ sender: Any?) { controller.toggle() }
+
+    @objc private func downloadModel(_ sender: Any?) {
+        ModelDownloader.shared.startDownload()
+    }
 
     @objc private func openSettings(_ sender: Any?) {
         if let w = settingsWindow {

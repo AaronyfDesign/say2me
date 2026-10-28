@@ -17,6 +17,13 @@ A local dictation tool for macOS: double-tap Control to start dictation, tap the
 - macOS 13+, Apple Silicon
 - Xcode Command Line Tools (build time only)
 
+## Using a Release (recommended)
+
+1. Download `say2me-vX.Y.Z-macos-arm64.zip` from [Releases](https://github.com/AaronyfDesign/say2me/releases), unzip and run. The speech engine is bundled inside the app.
+2. If Gatekeeper blocks it: `xattr -cr say2me.app` then open again.
+3. On first launch, click the menu bar icon and choose "语音模型：未下载（点击下载）" — the SenseVoice model (~230MB) is downloaded to `~/Library/Application Support/say2me/model/` automatically.
+4. Manual alternative: download `say2me-sensevoice-model.zip` from the [model release](https://github.com/AaronyfDesign/say2me/releases/tag/model-sensevoice-v1) and unzip it into `~/Library/Application Support/say2me/model/` (it should contain `model.int8.onnx` and `tokens.txt`).
+
 ## Quick Start
 
 ```bash
