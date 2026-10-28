@@ -14,6 +14,7 @@ final class StatusBarController: NSObject, ObservableObject, NSMenuDelegate {
     override init() {
         super.init()
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+        configureMenu_BarVisibility()
         HotkeyCenter.shared.isRecordingProvider = { DictationController.shared.state == .recording }
         HotkeyCenter.shared.recordingStartedAtProvider = { DictationController.shared.startedAt }
         HotkeyCenter.shared.start { [weak self] in
@@ -32,6 +33,25 @@ final class StatusBarController: NSObject, ObservableObject, NSMenuDelegate {
 
     private var bag = Set<AnyCancellable>()
     private var cancellable: Any?
+
+    /// macOS Sequoia (15.0+) 新行为：新装应用的菜单栏图标默认被系统隐藏，
+    /// 需用户在 系统设置 → 控制中心 → 菜单栏 中手动开启。
+    /// - autosaveName 让系统记住用户的开启选择，重启后不再回到隐藏状态
+    /// - 若当前图标不可见，首次启动时弹一次性指路提示
+    private func configureMenu_BarVisibility() {
+        guard #available(macOS 15.0, *) else { return }
+        statusItem.autosaveName = "say2me-menu-bar"
+        DispatchQueue.main.async { [weak self] in
+            guard let self, let item = self.statusItem, !item.isVisible,
+                  !UserDefaults.standard.bool(forKey: "sequoiaStatusHintShown") else { return }
+            UserDefaults.standard.set(true, forKey: "sequoiaStatusHintShown")
+            let alert = NSAlert()
+            alert.messageText = "say2me 已启动，菜单栏图标被系统隐藏了"
+            alert.informativeText = "macOS Sequoia 默认隐藏新应用的菜单栏图标。\n请打开 系统设置 → 控制中心 → 菜单栏，打开 say2me 的开关。\n（双击 Control 开始听写的功能不受影响，此提示只出现一次。）"
+            alert.alertStyle = .informational
+            alert.runModal()
+        }
+    }
 
     private func refreshIcon() {
         let icon: NSImage
