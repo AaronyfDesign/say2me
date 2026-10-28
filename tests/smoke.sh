@@ -7,7 +7,7 @@ cd "$(dirname "$0")/.."
 swiftc -O -parse-as-library \
   Sources/Prefs.swift Sources/HotkeyCenter.swift Sources/AudioRecorder.swift \
   Sources/Recognizer.swift Sources/TextInserter.swift Sources/DictationIndicator.swift Sources/DictationController.swift \
-  Sources/SettingsView.swift tests/smoke.swift \
+  Sources/SettingsView.swift Sources/ModelDownloader.swift tests/smoke.swift \
   -framework AppKit -framework AVFoundation -framework Carbon -framework ApplicationServices \
   -framework SwiftUI -framework Combine \
   -o tests/smoke
